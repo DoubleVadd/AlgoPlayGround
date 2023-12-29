@@ -42,6 +42,8 @@ const mergeSort = (arr, leftTemp =[], rightTemp =[]) => {
 }
 
 
+console.log(mergeSort([105, 79, 100, 110]))
+
 var iterations = 1000000;
 console.time('Function #1');
 for(var i = 0; i < iterations; i++ ){
