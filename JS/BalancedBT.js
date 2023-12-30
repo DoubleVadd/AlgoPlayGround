@@ -151,9 +151,46 @@ class Tree {
             console.log('value does not exist')
             return null
         }
-
-        
     }
+
+    levelOrder(cb=null, arr = [], start = this.root){
+        arr.push(start)
+        let valArray = []
+        while (arr.length !==0){
+            // console.log(arr)
+            let current = arr.shift()
+            if(cb){
+                cb(current)
+            }else if(current){
+                valArray.push(current.root)
+            }
+            if(current){
+                if(current.left){
+                    arr.push(current.left)
+                }
+                if(current.right){
+                    arr.push(current.right)
+                }
+            }   
+        }
+        if(!cb){
+            return valArray
+        }return null
+    }
+
+    // inOrder = (cb=null, arr = [], start = this.root){
+    //     arr.push(start)
+    //     let valArray = []
+    //     while(arr.length !== 0){
+    //         let current = start.left
+    //         arr.push(current)
+    //         if(current.left ===null)
+            
+    //     }
+    //     if(!cb){
+    //         return valArray
+    //     }return null
+    // }
 
 
     static prettyPrint(node , prefix = "", isLeft = true){
@@ -197,6 +234,7 @@ Tree.prettyPrint(balanceTree.root)
 // // balanceTree.delete(77)
 // balanceTree.delete(7)
 console.log(balanceTree.find(333))
+console.log(balanceTree.levelOrder())
 // Tree.prettyPrint(balanceTree.root)
 // console.log(balanceTree.root)
 
