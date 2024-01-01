@@ -11,10 +11,12 @@ class Tree {
         this.root = root
     }
 
-    BuildTree(arr=[], start, end, initial = true){
+    BuildTree(arr=[], initial = true, start=0, end=0 ){
         if(initial===true){
             arr = arr.sort((a,b) => a-b).filter((val, index, arr) => {
                 if(val !== arr[index-1]){return val}})
+                start = 0
+                end = arr.length -1
         }
         if(start>end){return null}
         let mid = Math.floor((start+end)/2)
@@ -25,8 +27,8 @@ class Tree {
             this.root = node
         }
 
-        node.left = this.BuildTree(arr, start, mid-1, false)
-        node.right = this.BuildTree(arr, mid+1, end, false)
+        node.left = this.BuildTree(arr,false, start, mid-1)
+        node.right = this.BuildTree(arr, false , mid+1, end)
 
         return node
     }
@@ -198,6 +200,69 @@ class Tree {
         }
     }
 
+    height(){
+        let max1 = 0
+        let start = this.root
+        while(start.left !==null){
+            start = start.left
+            max1 += 1
+            
+        }
+        let max2 = 0
+        start = this.root
+        while(start.right !==null){
+            start = start.right
+            max2 += 1
+            
+        }
+        return max1>max2 ? max1 : max2
+    }
+    isBalanced(){
+        let max1 = 0
+        let start = this.root
+        while(start.left !==null){
+            start = start.left
+            max1 += 1
+            
+        }
+        let max2 = 0
+        start = this.root
+        while(start.right !==null){
+            start = start.right
+            max2 += 1
+            
+        }
+        if(max1 === max2 || max1 - 1 === max2 || max1+1 ===max2){
+            return true
+        }else{
+            return false
+        }
+    }
+
+    reBalance(){
+        let arr = this.inOrder()
+        this.root = this.BuildTree(arr)
+    }
+
+    depth(val){
+        let depth = 0
+        let start = this.root
+        while(start){
+            if(start.root ===val){
+                return depth
+            }
+            else if(val>start.root){
+                depth+=1
+                start = start.right
+            }else if(val<start.root){
+                depth+=1
+                start = start.left
+            }else{
+                return null
+            }
+        }
+    }
+
     postOrder(start = this.root, cb=null, arr=[]){
         // Get root note
         if(start){
@@ -241,6 +306,8 @@ class Tree {
         }
     }
 
+    
+
 
     static prettyPrint(node , prefix = "", isLeft = true){
         if (node === null) {
@@ -258,32 +325,31 @@ class Tree {
 
 }
 
+const TreeTester = () =>{
+    let arr = Array.from({length: 100}, () => Math.floor(Math.random()*100));
+    console.log(arr)
+    balanceTree = new Tree()
+    balanceTree.BuildTree(arr)
+    
+    console.log('balance status', balanceTree.isBalanced())
+    console.log('Preorder', balanceTree.preOrder())
+    console.log('PostOrder', balanceTree.postOrder())
+    console.log('inOrder', balanceTree.inOrder())
+    console.log('levelOrder', balanceTree.inOrder())
+
+    let newArr = Array.from({length: 100}, () => Math.floor(Math.random()*1000))
+    newArr.forEach(a => balanceTree.insert(a))
+    console.log('balance status', balanceTree.isBalanced())
+    balanceTree.reBalance()
+    console.log('balance status after Rebalancing', balanceTree.isBalanced())
+    console.log('Preorder', balanceTree.preOrder())
+    console.log('PostOrder', balanceTree.postOrder())
+    console.log('inOrder', balanceTree.inOrder())
+    console.log('levelOrder', balanceTree.inOrder())
+
+    Tree.prettyPrint(balanceTree.root)
+}
+TreeTester()
 
 
-
-balanceTree = new Tree()
-let a = [1,33, 2,77,7,9,10, 10, 10,44,99]
-// a = a.sort((a,b) => a-b).filter((val, index, arr) => {
-//     if(val !== arr[index-1]){return val}})
-        
-// console.log(a)
-
-balanceTree.BuildTree(a, 0, 7)
-Tree.prettyPrint(balanceTree.root)
-// balanceTree.insert(99)
-// balanceTree.insert(88)
-// Tree.prettyPrint(balanceTree.root)
-// balanceTree.delete(10)
-// balanceTree.delete(33)
-// balanceTree.delete(1)
-// balanceTree.delete(2)
-// balanceTree.delete(9)
-// balanceTree.delete(44)
-// console.log('--------------')
-// // balanceTree.delete(77)
-// balanceTree.delete(7)
-console.log(balanceTree.find(333))
-console.log(balanceTree.preOrder())
-// Tree.prettyPrint(balanceTree.root)
-// console.log(balanceTree.root)
 
