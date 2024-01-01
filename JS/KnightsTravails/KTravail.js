@@ -1,5 +1,5 @@
 class Knight{
-    constructor(origin = [0,3]){
+    constructor(origin = [3,3]){
         this.origin = origin
     }
 
@@ -48,20 +48,38 @@ class Knight{
         this.origin = location
     }
 
-    goal(location,origin=this.origin, visited = new Set(), explored=[], path=[], step=0){
+    goal(location,origin=this.origin, visited = new Set(), explored=[], path={}, step=0){
         // generate an exploration arr
+        if( 0>location[0] || location[0]>7 || 0>location[1] || location[1]>7){
+            console.log('cannot reach the location')
+            return
+        }
 
         if(location[0] === origin[0] && location[1] === origin[1]){
             if(step ===1){
                 console.log(`path taken: ${this.origin} -> ${location}`)
             }
-            
             console.log('it is possible')
-            console.log(path)
-            console.log(step)
+            let pathTaken = [location]
+            let currentLoc = location
+            while (path[currentLoc] !== this.origin){
+                currentLoc = path[currentLoc]
+                pathTaken.push(currentLoc)
+            }
+            pathTaken.push(this.origin)
+            pathTaken.reverse()
+            console.log(`knightMoves(${this.origin} -> ${location})`)
+            console.log(`You made it in ${pathTaken.length} moves!  Here's your path:`)
+            pathTaken.forEach(e => console.log(e))
             return true
         }else{
-            explored = explored.concat(this.movementOptions(origin))
+            let temp = this.movementOptions(origin)
+            temp.forEach(e=>{
+                if(!(e in path)){
+                    path[e] = origin
+                }
+            })
+            explored = explored.concat(temp)
             let currentExploration = explored[0]
             explored.shift()
             while(visited.has(currentExploration) && explored.length>0){
@@ -72,14 +90,13 @@ class Knight{
             if(!visited.has(currentExploration)){
                 step+=1
                 visited.add(currentExploration)
-                path.push(currentExploration)
-                path = this.goal(location, currentExploration, visited, explored, path, step)
-                return path
+                this.goal(location, currentExploration, visited, explored, path, step)
+                return 
             }
         }
 
         console.log('getting to that position is impossible')
-        return path
+        return 
 
         
 
@@ -93,4 +110,4 @@ a = new Knight()
 
 
 
-a.goal([2,4])
+a.goal([6,6])
