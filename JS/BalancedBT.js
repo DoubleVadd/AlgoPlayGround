@@ -178,19 +178,68 @@ class Tree {
         }return null
     }
 
-    // inOrder = (cb=null, arr = [], start = this.root){
-    //     arr.push(start)
-    //     let valArray = []
-    //     while(arr.length !== 0){
-    //         let current = start.left
-    //         arr.push(current)
-    //         if(current.left ===null)
+    inOrder(start = this.root, cb=null, arr=[]){
+        // Get root note
+        if(start){
+            if(start.left){
+                this.inOrder(start.left, cb, arr)
+            }
+            if(cb){
+                cb(start.root)
+            }else{
+                arr.push(start.root)
+            }
+            if(start.right){
+                this.inOrder(start.right, cb, arr)
+            }
+        }
+        if(!cb){
+            return arr
+        }
+    }
+
+    postOrder(start = this.root, cb=null, arr=[]){
+        // Get root note
+        if(start){
+            if(start.left){
+                this.postOrder(start.left, cb, arr)
+            }
             
-    //     }
-    //     if(!cb){
-    //         return valArray
-    //     }return null
-    // }
+            if(start.right){
+                this.postOrder(start.right, cb, arr)
+            }
+            if(cb){
+                cb(start.root)
+            }else{
+                arr.push(start.root)
+            }
+        }
+        if(!cb){
+            return arr
+        }
+    }
+
+    preOrder(start = this.root, cb=null, arr=[]){
+        // Get root note
+        if(start){
+            if(cb){
+                cb(start.root)
+            }else{
+                arr.push(start.root)
+            }
+            if(start.left){
+                this.preOrder(start.left, cb, arr)
+            }
+            
+            if(start.right){
+                this.preOrder(start.right, cb, arr)
+            }
+            
+        }
+        if(!cb){
+            return arr
+        }
+    }
 
 
     static prettyPrint(node , prefix = "", isLeft = true){
@@ -234,7 +283,7 @@ Tree.prettyPrint(balanceTree.root)
 // // balanceTree.delete(77)
 // balanceTree.delete(7)
 console.log(balanceTree.find(333))
-console.log(balanceTree.levelOrder())
+console.log(balanceTree.preOrder())
 // Tree.prettyPrint(balanceTree.root)
 // console.log(balanceTree.root)
 
